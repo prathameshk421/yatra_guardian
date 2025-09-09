@@ -48,7 +48,7 @@ class WelcomeScreen extends StatelessWidget {
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          'Welcome to Yatra Guardian',
+                          'Welcome to यात्रा Guardian',
                           maxLines: 1,
                           softWrap: false,
                           textAlign: TextAlign.center,
