@@ -62,16 +62,62 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       // Subtitle/tagline under title
-                      Text(
-                        'Your trusted companion for safe and memorable journeys',
-                        textAlign: TextAlign.center,
-                        style: AppTheme.mutedText.copyWith(
-                          fontSize: 14,
-                          height: 1.4,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Your trusted companion for safe and memorable journeys',
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          style: AppTheme.mutedText.copyWith(
+                            fontSize: 14,
+                            height: 1.4,
+                          ),
                         ),
                       ),
 
-                      // Leave breathable space in the middle for a future background image
+                      // Feature cards section
+                      const SizedBox(height: 40),
+                      Text(
+                        'Navigate confidently with real-time safety alerts,\nconnect instantly with emergency services, and discover\npersonalized travel recommendations, all in one app',
+                        textAlign: TextAlign.center,
+                        style: AppTheme.mutedText.copyWith(
+                          fontSize: 13,
+                          height: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      
+                      // Feature cards row
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Expanded(
+                              child: _FeatureCard(
+                                icon: Icons.security,
+                                title: 'Safety First',
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: _FeatureCard(
+                                icon: Icons.navigation,
+                                title: 'Smart Navigation',
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: _FeatureCard(
+                                icon: Icons.favorite,
+                                title: 'Trusted Journeys',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      // Push everything below to bottom
                       const Spacer(),
 
                       // Language selector
@@ -116,6 +162,57 @@ class WelcomeScreen extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+class _FeatureCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+
+  const _FeatureCard({
+    required this.icon,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.grey.shade200, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Icon(
+            icon,
+            size: 28,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          title,
+          maxLines: 1,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+        ),
+      ],
     );
   }
 }
