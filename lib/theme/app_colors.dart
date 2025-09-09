@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color scaffold = Color(0xFFF4F5F7);
+  static const Color scaffold = Colors.white;
   static const Color onBackground = Color(0xFF111827);
   static const Color muted = Color(0xFF6B7280);
   static const Color card = Colors.white;
