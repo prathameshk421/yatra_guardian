@@ -21,7 +21,6 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: scaffold,
-      bottomNavigationBar: _BottomNav(accent: accent, muted: muted, onBackground: onBackground),
       body: SafeArea(
         child: Column(
           children: [
@@ -887,64 +886,6 @@ class _SafetyTip extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _BottomNav extends StatelessWidget {
-  final Color accent;
-  final Color muted;
-  final Color onBackground;
-  
-  const _BottomNav({
-    required this.accent,
-    required this.muted,
-    required this.onBackground,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: BottomNavigationBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        selectedItemColor: accent,
-        unselectedItemColor: muted,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore_rounded),
-            label: 'Explore',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline_rounded),
-            label: 'Create',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.emergency_rounded),
-            label: 'Emergency',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_outlined),
-            label: 'Alerts',
-          ),
-        ],
-      ),
     );
   }
 }

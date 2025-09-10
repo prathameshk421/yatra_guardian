@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yatra_guardian/screens/home/home_page.dart';
 import 'package:yatra_guardian/screens/welcome/welcome_screen.dart';
+import 'package:yatra_guardian/widgets/layout/main_layout.dart';
 import 'package:yatra_guardian/services/auth_service.dart';
 import 'theme/app_theme.dart';
 
@@ -13,11 +13,11 @@ class MyApp extends StatelessWidget {
       title: 'यात्रा Guardian',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      initialRoute: '/',
+      initialRoute: '/home',
       routes: {
         '/': (context) => const AuthWrapper(),
         '/welcome': (context) => const WelcomeScreen(),
-        '/home': (context) => const HomePage(),
+        '/home': (context) => const MainLayout(),
       },
     );
   }
@@ -65,6 +65,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
       );
     }
 
-    return _isAuthenticated ? const HomePage() : const WelcomeScreen();
+    return _isAuthenticated ? const MainLayout() : const WelcomeScreen();
   }
 }
