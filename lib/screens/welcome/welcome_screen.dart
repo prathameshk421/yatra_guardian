@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yatra_guardian/theme/app_theme.dart';
 import 'package:yatra_guardian/widgets/common/language_dropdown.dart';
 import 'package:yatra_guardian/widgets/common/social_button.dart';
+import 'package:yatra_guardian/services/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -134,7 +135,45 @@ class WelcomeScreen extends StatelessWidget {
                         height: buttonHeight,
                         leadingAsset: 'assets/icons/google.svg',
                         leadingSize: 24,
-                        onPressed: () {},
+                        onPressed: () async {
+                          try {
+                            // Show loading indicator
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                            
+                            // Authenticate with Google
+                            final userProfile = await AuthService.authenticateWithGoogle();
+                            
+                            // Hide loading indicator
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                            }
+                            
+                            if (userProfile != null && context.mounted) {
+                              // Navigate to home screen
+                              Navigator.of(context).pushReplacementNamed('/home');
+                            } else {
+                              throw 'Failed to get user profile';
+                            }
+                          } catch (e) {
+                            // Hide loading indicator if still showing
+                            if (context.mounted) {
+                              Navigator.of(context, rootNavigator: true).pop();
+                              
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Google authentication failed: $e'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        },
                       ),
                       const SizedBox(height: 12),
                       SocialButton(
@@ -143,7 +182,45 @@ class WelcomeScreen extends StatelessWidget {
                         height: buttonHeight,
                         leadingAsset: 'assets/icons/microsoft.svg',
                         leadingSize: 24,
-                        onPressed: () {},
+                        onPressed: () async {
+                          try {
+                            // Show loading indicator
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                            
+                            // Authenticate with Microsoft
+                            final userProfile = await AuthService.authenticateWithMicrosoft();
+                            
+                            // Hide loading indicator
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                            }
+                            
+                            if (userProfile != null && context.mounted) {
+                              // Navigate to home screen
+                              Navigator.of(context).pushReplacementNamed('/home');
+                            } else {
+                              throw 'Failed to get user profile';
+                            }
+                          } catch (e) {
+                            // Hide loading indicator if still showing
+                            if (context.mounted) {
+                              Navigator.of(context, rootNavigator: true).pop();
+                              
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Microsoft authentication failed: $e'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        },
                       ),
 
                       SizedBox(height: isSmallHeight ? 12 : 16),
