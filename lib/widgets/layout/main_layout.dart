@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:yatra_guardian/screens/home/home_page.dart';
+import 'package:yatra_guardian/screens/trip/create_trip_page.dart';
 import 'package:yatra_guardian/widgets/common/bottom_navigation_widget.dart';
+import 'package:yatra_guardian/widgets/common/top_header_widget.dart';
 
 class MainLayout extends StatefulWidget {
   final int initialIndex;
@@ -57,7 +59,7 @@ class _MainLayoutState extends State<MainLayout> {
         children: [
           const HomePage(),
           _ExplorePage(),
-          _CreatePage(),
+          const CreateTripPage(),
           _EmergencyPage(),
           _AlertsPage(),
         ],
@@ -74,25 +76,31 @@ class _MainLayoutState extends State<MainLayout> {
 class _ExplorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Explore Page',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-}
-
-class _CreatePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Create Trip Page',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    final Color scaffold = const Color(0xFFF4F5F7);
+    final Color onBackground = const Color(0xFF111827);
+    
+    return Scaffold(
+      backgroundColor: scaffold,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top header with SOS and Profile
+            TopHeaderWidget(onBackground: onBackground),
+            
+            // Main content
+            Expanded(
+              child: Center(
+                child: Text(
+                  'Explore Page',
+                  style: TextStyle(
+                    fontSize: 24, 
+                    fontWeight: FontWeight.bold,
+                    color: onBackground,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -102,11 +110,31 @@ class _CreatePage extends StatelessWidget {
 class _EmergencyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Emergency Page',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    final Color scaffold = const Color(0xFFF4F5F7);
+    final Color onBackground = const Color(0xFF111827);
+    
+    return Scaffold(
+      backgroundColor: scaffold,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top header with SOS and Profile
+            TopHeaderWidget(onBackground: onBackground),
+            
+            // Main content
+            Expanded(
+              child: Center(
+                child: Text(
+                  'Emergency Page',
+                  style: TextStyle(
+                    fontSize: 24, 
+                    fontWeight: FontWeight.bold,
+                    color: onBackground,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -116,11 +144,31 @@ class _EmergencyPage extends StatelessWidget {
 class _AlertsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Alerts Page',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    final Color scaffold = const Color(0xFFF4F5F7);
+    final Color onBackground = const Color(0xFF111827);
+    
+    return Scaffold(
+      backgroundColor: scaffold,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top header with SOS and Profile
+            TopHeaderWidget(onBackground: onBackground),
+            
+            // Main content
+            Expanded(
+              child: Center(
+                child: Text(
+                  'Alerts Page',
+                  style: TextStyle(
+                    fontSize: 24, 
+                    fontWeight: FontWeight.bold,
+                    color: onBackground,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
