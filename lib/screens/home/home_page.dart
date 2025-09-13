@@ -147,6 +147,8 @@ class _CurrentTripCard extends StatelessWidget {
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
           Text(
@@ -167,7 +169,7 @@ class _CurrentTripCard extends StatelessWidget {
                   fontSize: 14,
                 ),
               ),
-              Expanded(
+              Flexible(
                 child: Text(
                   showTourId ? 'TRP-2024-001' : '••••••••••••',
                   style: TextStyle(
@@ -175,6 +177,8 @@ class _CurrentTripCard extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
               GestureDetector(
@@ -271,6 +275,8 @@ class _YourTripsCard extends StatelessWidget {
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Container(
