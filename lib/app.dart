@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yatra_guardian/screens/welcome/welcome_screen.dart';
+import 'package:yatra_guardian/screens/police/police_dashboard.dart';
 import 'package:yatra_guardian/widgets/layout/main_layout.dart';
 import 'package:yatra_guardian/services/auth_service.dart';
 import 'theme/app_theme.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const AuthWrapper(),
         '/welcome': (context) => const WelcomeScreen(),
         '/home': (context) => const MainLayout(),
+        '/police-dashboard': (context) => const PoliceDashboard(),
       },
     );
   }
