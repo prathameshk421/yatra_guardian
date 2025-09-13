@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../widgets/common/top_header_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,8 +10,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _showTourId = false;
-
   @override
   Widget build(BuildContext context) {
     final Color scaffold = const Color(0xFFF4F5F7); // light bg like 2nd image
@@ -39,8 +38,6 @@ class _HomePageState extends State<HomePage> {
                             onBackground: onBackground,
                             muted: muted,
                             accent: accent,
-                            showTourId: _showTourId,
-                            onToggleTourId: () => setState(() => _showTourId = !_showTourId),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -78,17 +75,36 @@ class _CurrentTripCard extends StatelessWidget {
   final Color onBackground;
   final Color muted;
   final Color accent;
-  final bool showTourId;
-  final VoidCallback onToggleTourId;
 
   const _CurrentTripCard({
     required this.card,
     required this.onBackground,
     required this.muted,
     required this.accent,
-    required this.showTourId,
-    required this.onToggleTourId,
   });
+
+  void _copyTripIdToClipboard(BuildContext context) {
+    const tripId = 'trip_1757437199588_bpdolvdr6';
+    Clipboard.setData(const ClipboardData(text: tripId));
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            const Text('Trip ID copied to clipboard!'),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,9 +171,9 @@ class _CurrentTripCard extends StatelessWidget {
               ),
               Flexible(
                 child: Text(
-                  showTourId ? 'TRP-2024-001' : '••••••••••••',
+                  '••••••••••••••••••••••••••••••',
                   style: TextStyle(
-                    color: showTourId ? onBackground : muted,
+                    color: muted,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -166,9 +182,9 @@ class _CurrentTripCard extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: onToggleTourId,
+                onTap: () => _copyTripIdToClipboard(context),
                 child: Icon(
-                  showTourId ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                  Icons.copy_rounded,
                   color: accent,
                   size: 20,
                 ),
