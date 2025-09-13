@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../widgets/common/top_header_widget.dart';
+import '../trip/trip_details_page.dart';
+import '../trip/trip_list_page.dart';
+import '../../models/trip_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,12 +50,60 @@ class _HomePageState extends State<HomePage> {
                             onBackground: onBackground,
                             muted: muted,
                             accent: accent,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const TripListPage(),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    _CurrentTripSection(card: card, onBackground: onBackground, muted: muted, accent: accent),
+                    _CurrentTripSection(
+                      card: card, 
+                      onBackground: onBackground, 
+                      muted: muted, 
+                      accent: accent,
+                      onTap: () {
+                        // Create a mock current trip for demonstration
+                        final currentTrip = Trip(
+                          id: 'trip_1757437199588_bpdolvdr6',
+                          title: 'Goa Beach Resort',
+                          destination: 'Goa, India',
+                          startDate: DateTime.now().subtract(const Duration(days: 2)),
+                          endDate: DateTime.now().add(const Duration(days: 3)),
+                          joinedUsers: ['user1', 'user2', 'user3'],
+                          groupId: 'group_123',
+                          events: [
+                            TripEvent(
+                              id: 'event1',
+                              type: 'Check-in',
+                              location: 'Hotel Check-in',
+                              time: DateTime.now().subtract(const Duration(days: 2)),
+                            ),
+                            TripEvent(
+                              id: 'event2',
+                              type: 'Activity',
+                              location: 'Beach Visit',
+                              time: DateTime.now().subtract(const Duration(days: 1)),
+                            ),
+                          ],
+                          status: 'active',
+                          imageUrl: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&q=80',
+                        );
+                        
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TripDetailsPage(trip: currentTrip),
+                          ),
+                        );
+                      },
+                    ),
                     const SizedBox(height: 20),
                     _MiniMapCard(card: card, onBackground: onBackground, muted: muted),
                     const SizedBox(height: 20),
@@ -181,12 +232,14 @@ class _CurrentTripSection extends StatelessWidget {
   final Color onBackground;
   final Color muted;
   final Color accent;
+  final VoidCallback? onTap;
 
   const _CurrentTripSection({
     required this.card,
     required this.onBackground,
     required this.muted,
     required this.accent,
+    this.onTap,
   });
 
   void _copyTripIdToClipboard(BuildContext context) {
@@ -214,25 +267,27 @@ class _CurrentTripSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: card,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.location_on_rounded, color: accent, size: 20),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: card,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.location_on_rounded, color: accent, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Current Trip',
@@ -347,6 +402,7 @@ class _CurrentTripSection extends StatelessWidget {
           ),
         ],
       ),
+      ),
     );
   }
 }
@@ -356,12 +412,14 @@ class _YourTripsCard extends StatelessWidget {
   final Color onBackground;
   final Color muted;
   final Color accent;
+  final VoidCallback? onTap;
 
   const _YourTripsCard({
     required this.card,
     required this.onBackground,
     required this.muted,
     required this.accent,
+    this.onTap,
   });
 
   @override
@@ -377,7 +435,9 @@ class _YourTripsCard extends StatelessWidget {
       {"name": "Chennai Marina", "status": "Completed"},
     ];
 
-    return Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
       height: 160, // Fixed height to match Current Trip card
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -447,6 +507,7 @@ class _YourTripsCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }
