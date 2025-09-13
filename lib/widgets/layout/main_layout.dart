@@ -3,8 +3,8 @@ import 'package:yatra_guardian/screens/home/home_page.dart';
 import 'package:yatra_guardian/screens/trip/create_trip_page.dart';
 import 'package:yatra_guardian/screens/emergency/emergency_page.dart';
 import 'package:yatra_guardian/screens/explore/explore_page.dart';
+import 'package:yatra_guardian/screens/alerts/alerts_page.dart';
 import 'package:yatra_guardian/widgets/common/bottom_navigation_widget.dart';
-import 'package:yatra_guardian/widgets/common/top_header_widget.dart';
 
 class MainLayout extends StatefulWidget {
   final int initialIndex;
@@ -63,47 +63,12 @@ class _MainLayoutState extends State<MainLayout> {
           const ExplorePage(),
           const CreateTripPage(),
           const EmergencyPage(),
-          _AlertsPage(),
+          const AlertsPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationWidget(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
-      ),
-    );
-  }
-}
-
-
-class _AlertsPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final Color scaffold = const Color(0xFFF4F5F7);
-    final Color onBackground = const Color(0xFF111827);
-    
-    return Scaffold(
-      backgroundColor: scaffold,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Top header with SOS and Profile
-            TopHeaderWidget(onBackground: onBackground),
-            
-            // Main content
-            Expanded(
-              child: Center(
-                child: Text(
-                  'Alerts Page',
-                  style: TextStyle(
-                    fontSize: 24, 
-                    fontWeight: FontWeight.bold,
-                    color: onBackground,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
