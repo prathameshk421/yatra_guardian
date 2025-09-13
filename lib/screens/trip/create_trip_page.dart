@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/common/top_header_widget.dart';
+import '../../theme/app_colors.dart';
 
 class CreateTripPage extends StatefulWidget {
   const CreateTripPage({super.key});
@@ -100,18 +101,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
 
   void _createTrip() {
     if (_formKey.currentState!.validate()) {
-      // TODO: Implement API call to create trip
-      final tripData = {
-        'title': _titleController.text.trim(),
-        'destination': _destinationController.text.trim(),
-        'startDate': _startDate.toIso8601String(),
-        'endDate': _endDate.toIso8601String(),
-        'invitePublicIds': _invitePublicIds,
-        'inviteEmails': _inviteEmails,
-      };
-      
-      print('Creating trip with data: $tripData');
-      
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -135,18 +124,13 @@ class _CreateTripPageState extends State<CreateTripPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Color scaffold = const Color(0xFFF4F5F7);
-    final Color onBackground = const Color(0xFF111827);
-    final Color card = Colors.white;
-    final Color accent = const Color(0xFF0EA5E9);
-
     return Scaffold(
-      backgroundColor: scaffold,
+      backgroundColor: AppColors.scaffold,
       body: SafeArea(
         child: Column(
           children: [
             // Top header with SOS and Profile
-            TopHeaderWidget(onBackground: onBackground),
+            TopHeaderWidget(onBackground: AppColors.onBackground),
             
             // Form
             Expanded(
@@ -158,10 +142,10 @@ class _CreateTripPageState extends State<CreateTripPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Trip Title
-                      _buildSectionTitle('Trip Details', onBackground),
+                      _buildSectionTitle('Trip Details', AppColors.onBackground),
                       const SizedBox(height: 16),
                       _buildCard(
-                        card,
+                        AppColors.card,
                         child: Column(
                           children: [
                             _buildTextField(
@@ -194,10 +178,10 @@ class _CreateTripPageState extends State<CreateTripPage> {
                       const SizedBox(height: 24),
                       
                       // Dates
-                      _buildSectionTitle('Trip Dates', onBackground),
+                      _buildSectionTitle('Trip Dates', AppColors.onBackground),
                       const SizedBox(height: 16),
                       _buildCard(
-                        card,
+                        AppColors.card,
                         child: Row(
                           children: [
                             Expanded(
@@ -222,10 +206,10 @@ class _CreateTripPageState extends State<CreateTripPage> {
                       const SizedBox(height: 24),
                       
                       // Invite Public IDs
-                      _buildSectionTitle('Invite by Public ID', onBackground),
+                      _buildSectionTitle('Invite by Public ID', AppColors.onBackground),
                       const SizedBox(height: 16),
                       _buildCard(
-                        card,
+                        AppColors.card,
                         child: Column(
                           children: [
                             Row(
@@ -238,12 +222,12 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                   ),
                                 ),
                                 const SizedBox(width: 12),
-                                _buildAddButton(_addPublicId, accent),
+                                _buildAddButton(_addPublicId, AppColors.accent),
                               ],
                             ),
                             if (_invitePublicIds.isNotEmpty) ...[
                               const SizedBox(height: 16),
-                              _buildInviteList(_invitePublicIds, _removePublicId, accent),
+                              _buildInviteList(_invitePublicIds, _removePublicId, AppColors.accent),
                             ],
                           ],
                         ),
@@ -252,10 +236,10 @@ class _CreateTripPageState extends State<CreateTripPage> {
                       const SizedBox(height: 24),
                       
                       // Invite Emails
-                      _buildSectionTitle('Invite by Email', onBackground),
+                      _buildSectionTitle('Invite by Email', AppColors.onBackground),
                       const SizedBox(height: 16),
                       _buildCard(
-                        card,
+                        AppColors.card,
                         child: Column(
                           children: [
                             Row(
@@ -269,12 +253,12 @@ class _CreateTripPageState extends State<CreateTripPage> {
                                   ),
                                 ),
                                 const SizedBox(width: 12),
-                                _buildAddButton(_addEmail, accent),
+                                _buildAddButton(_addEmail, AppColors.accent),
                               ],
                             ),
                             if (_inviteEmails.isNotEmpty) ...[
                               const SizedBox(height: 16),
-                              _buildInviteList(_inviteEmails, _removeEmail, accent),
+                              _buildInviteList(_inviteEmails, _removeEmail, AppColors.accent),
                             ],
                           ],
                         ),
@@ -289,7 +273,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                         child: ElevatedButton(
                           onPressed: _createTrip,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: accent,
+                            backgroundColor: AppColors.accent,
                             foregroundColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
@@ -367,7 +351,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF0EA5E9)),
+          borderSide: const BorderSide(color: AppColors.accent),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
