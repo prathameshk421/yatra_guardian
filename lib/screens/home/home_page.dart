@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         Expanded(
-                          child: _CurrentTripCard(
+                          child: _QuickStatsCard(
                             card: card,
                             onBackground: onBackground,
                             muted: muted,
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    _QuickStatsSection(card: card, onBackground: onBackground, muted: muted, accent: accent),
+                    _CurrentTripSection(card: card, onBackground: onBackground, muted: muted, accent: accent),
                     const SizedBox(height: 20),
                     _MiniMapCard(card: card, onBackground: onBackground, muted: muted),
                     const SizedBox(height: 20),
@@ -70,13 +70,119 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _CurrentTripCard extends StatelessWidget {
+class _QuickStatsCard extends StatelessWidget {
   final Color card;
   final Color onBackground;
   final Color muted;
   final Color accent;
 
-  const _CurrentTripCard({
+  const _QuickStatsCard({
+    required this.card,
+    required this.onBackground,
+    required this.muted,
+    required this.accent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 160, // Fixed height for equal sizing
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: card,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.analytics_rounded, color: accent, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'Quick Stats',
+                style: TextStyle(
+                  color: onBackground,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: accent.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(Icons.trip_origin_rounded, color: accent, size: 16),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Total Trips: 12',
+                        style: TextStyle(
+                          color: onBackground,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(Icons.location_on_rounded, color: Colors.green, size: 16),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Cities Visited: 8',
+                        style: TextStyle(
+                          color: onBackground,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CurrentTripSection extends StatelessWidget {
+  final Color card;
+  final Color onBackground;
+  final Color muted;
+  final Color accent;
+
+  const _CurrentTripSection({
     required this.card,
     required this.onBackground,
     required this.muted,
@@ -109,7 +215,6 @@ class _CurrentTripCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 160, // Fixed height for equal sizing
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: card,
@@ -133,60 +238,109 @@ class _CurrentTripCard extends StatelessWidget {
                 'Current Trip',
                 style: TextStyle(
                   color: onBackground,
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            'Goa Beach Resort',
-            style: TextStyle(
-              color: onBackground,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Active • 2 days left',
-            style: TextStyle(
-              color: accent,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const Spacer(),
+          const SizedBox(height: 16),
           Row(
             children: [
-              Text(
-                'Tour ID: ',
-                style: TextStyle(
-                  color: muted,
-                  fontSize: 14,
-                ),
-              ),
-              Flexible(
-                child: Text(
-                  '••••••••••••••••••••••••••••••',
-                  style: TextStyle(
-                    color: muted,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: const DecorationImage(
+                    image: NetworkImage('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&q=80'),
+                    fit: BoxFit.cover,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
                 ),
               ),
-              GestureDetector(
-                onTap: () => _copyTripIdToClipboard(context),
-                child: Icon(
-                  Icons.copy_rounded,
-                  color: accent,
-                  size: 20,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Goa Beach Resort',
+                      style: TextStyle(
+                        color: onBackground,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Active • 2 days left',
+                      style: TextStyle(
+                        color: accent,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.security_rounded, color: Colors.green, size: 16),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Safety: 95%',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Text(
+                          'Tour ID: ',
+                          style: TextStyle(
+                            color: muted,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Flexible(
+                          child: Text(
+                            '••••••••••••••••••••••••••••••',
+                            style: TextStyle(
+                              color: muted,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: () => _copyTripIdToClipboard(context),
+                          child: Icon(
+                            Icons.copy_rounded,
+                            color: accent,
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -216,6 +370,11 @@ class _YourTripsCard extends StatelessWidget {
       {"name": "Iyer's House", "status": "Completed"},
       {"name": "Sikkim", "status": "Upcoming"},
       {"name": "PICT", "status": "Completed"},
+      {"name": "Mumbai Gateway", "status": "Completed"},
+      {"name": "Kerala Backwaters", "status": "Upcoming"},
+      {"name": "Rajasthan Desert", "status": "Completed"},
+      {"name": "Himachal Hills", "status": "Upcoming"},
+      {"name": "Chennai Marina", "status": "Completed"},
     ];
 
     return Container(
@@ -251,57 +410,40 @@ class _YourTripsCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Expanded(
-            child: ListView.builder(
-              itemCount: trips.length,
-              itemBuilder: (context, index) {
-                final trip = trips[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    children: [
-                      Text(
-                        '→ ',
-                        style: TextStyle(
-                          color: accent,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          trip['name']!,
-                          style: TextStyle(
-                            color: onBackground,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
+            child: SingleChildScrollView(
+              child: Column(
+                children: trips.map((trip) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            trip['name']!,
+                            style: TextStyle(
+                              color: onBackground,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
+                        const SizedBox(width: 8),
+                        Icon(
+                          trip['status'] == 'Completed' 
+                              ? Icons.check_circle_rounded
+                              : Icons.schedule_rounded,
                           color: trip['status'] == 'Completed' 
-                              ? Colors.green.withOpacity(0.1)
-                              : Colors.orange.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
+                              ? Colors.green
+                              : Colors.orange,
+                          size: 16,
                         ),
-                        child: Text(
-                          trip['status']!,
-                          style: TextStyle(
-                            color: trip['status'] == 'Completed' 
-                                ? Colors.green
-                                : Colors.orange,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ],
@@ -378,128 +520,6 @@ class _MiniMapCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-// Quick Stats Section
-class _QuickStatsSection extends StatelessWidget {
-  final Color card;
-  final Color onBackground;
-  final Color muted;
-  final Color accent;
-
-  const _QuickStatsSection({
-    required this.card,
-    required this.onBackground,
-    required this.muted,
-    required this.accent,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: card,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Quick Stats',
-            style: TextStyle(
-              color: onBackground,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: _StatItem(
-                  icon: Icons.trip_origin_rounded,
-                  label: 'Total Trips',
-                  value: '12',
-                  color: accent,
-                ),
-              ),
-              Expanded(
-                child: _StatItem(
-                  icon: Icons.location_on_rounded,
-                  label: 'Cities Visited',
-                  value: '8',
-                  color: Colors.green,
-                ),
-              ),
-              Expanded(
-                child: _StatItem(
-                  icon: Icons.security_rounded,
-                  label: 'Safety Score',
-                  value: '95%',
-                  color: Colors.orange,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-
-  const _StatItem({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icon, color: color, size: 24),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(
-            color: const Color(0xFF111827),
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            color: const Color(0xFF6B7280),
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
     );
   }
 }
