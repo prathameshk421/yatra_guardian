@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/common/top_header_widget.dart';
 import '../../theme/app_colors.dart';
+import '../../services/trip_service.dart';
 
 class CreateTripPage extends StatefulWidget {
   const CreateTripPage({super.key});
@@ -22,6 +23,8 @@ class _CreateTripPageState extends State<CreateTripPage> {
   
   final _publicIdController = TextEditingController();
   final _emailController = TextEditingController();
+  
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -99,26 +102,65 @@ class _CreateTripPageState extends State<CreateTripPage> {
     }
   }
 
-  void _createTrip() {
+  void _createTrip() async {
     if (_formKey.currentState!.validate()) {
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Trip created successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      
-      // Reset form
-      _formKey.currentState!.reset();
-      _titleController.clear();
-      _destinationController.clear();
       setState(() {
-        _startDate = DateTime.now();
-        _endDate = DateTime.now().add(const Duration(days: 1));
-        _invitePublicIds.clear();
-        _inviteEmails.clear();
+        _isLoading = true;
       });
+      
+      try {
+        // Hardcoded userId for now - you can replace this with actual user ID later
+        const hardcodedUserId = 'user_1757524402159_o98yhz8co';
+        
+        final response = await TripService.createTrip(
+          userId: hardcodedUserId,
+          title: _titleController.text.trim(),
+          destination: _destinationController.text.trim(),
+          startDate: _startDate,
+          endDate: _endDate,
+          invitePublicIds: _invitePublicIds,
+          inviteEmails: _inviteEmails,
+        );
+        
+        if (response != null && response['success'] == true) {
+          // Show success message
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Trip "${response['trip']['title']}" created successfully!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            
+            // Reset form
+            _formKey.currentState!.reset();
+            _titleController.clear();
+            _destinationController.clear();
+            setState(() {
+              _startDate = DateTime.now();
+              _endDate = DateTime.now().add(const Duration(days: 1));
+              _invitePublicIds.clear();
+              _inviteEmails.clear();
+            });
+          }
+        }
+      } catch (e) {
+        // Show error message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to create trip: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
     }
   }
 
@@ -271,7 +313,7 @@ class _CreateTripPageState extends State<CreateTripPage> {
                         width: double.infinity,
                         height: 56,
                         child: ElevatedButton(
-                          onPressed: _createTrip,
+                          onPressed: _isLoading ? null : _createTrip,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.accent,
                             foregroundColor: Colors.white,
@@ -280,13 +322,22 @@ class _CreateTripPageState extends State<CreateTripPage> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          child: const Text(
-                            'Create Trip',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  'Create Trip',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                         ),
                       ),
                       
