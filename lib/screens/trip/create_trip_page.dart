@@ -29,7 +29,6 @@ class _CreateTripPageState extends State<CreateTripPage> {
   @override
   void initState() {
     super.initState();
-    // Set default dates
     _startDate = DateTime.now();
     _endDate = DateTime.now().add(const Duration(days: 1));
   }

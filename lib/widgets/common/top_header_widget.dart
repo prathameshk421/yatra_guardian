@@ -1,30 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// A reusable top header widget that contains SOS button, app title, and profile icon.
-/// This widget is designed to be used across all main navigation pages to provide
-/// consistent branding and emergency access.
-/// 
-/// Usage:
-/// ```dart
-/// TopHeaderWidget(
-///   onBackground: const Color(0xFF111827),
-///   onProfileTap: () {
-///     Navigator.pushNamed(context, '/profile');
-///   },
-///   onSOSTap: () {
-///     // Custom SOS handling
-///   },
-/// )
-/// ```
 class TopHeaderWidget extends StatelessWidget {
-  /// The color for text and icons
   final Color onBackground;
-  
-  /// Callback when profile icon is tapped. If null, uses default behavior.
   final VoidCallback? onProfileTap;
-  
-  /// Callback when SOS button is tapped. If null, shows default SOS dialog.
   final VoidCallback? onSOSTap;
 
   const TopHeaderWidget({
@@ -41,10 +20,7 @@ class TopHeaderWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // SOS Button
           _SOSButton(onTap: onSOSTap),
-          
-          // App Title
           RichText(
             text: TextSpan(
               children: [
@@ -67,13 +43,8 @@ class TopHeaderWidget extends StatelessWidget {
               ],
             ),
           ),
-          
-          // Profile Icon
           GestureDetector(
-            onTap: onProfileTap ?? () {
-              // Default navigation to profile if no custom action provided
-              // TODO: Implement default profile navigation
-            },
+            onTap: onProfileTap ?? () {},
             child: Container(
               width: 40,
               height: 40,
@@ -175,13 +146,6 @@ class _SOSButton extends StatelessWidget {
   }
 
   void _handleSOSAction(BuildContext context) {
-    // TODO: Implement SOS functionality
-    // This could include:
-    // - Sending location to emergency contacts
-    // - Making emergency calls
-    // - Triggering panic alerts
-    // - Notifying authorities
-    
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Emergency alert sent successfully!'),

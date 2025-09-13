@@ -3,10 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
 class TripService {
-  // Using the same base URL as auth service
   static const String baseUrl = 'http://localhost:5050';
   
-  /// Create a new trip
   static Future<Map<String, dynamic>?> createTrip({
     required String userId,
     required String title,
@@ -58,7 +56,6 @@ class TripService {
     }
   }
   
-  /// Get user trips
   static Future<List<Map<String, dynamic>>> getUserTrips(String userId) async {
     try {
       final response = await http.get(
@@ -87,7 +84,6 @@ class TripService {
     }
   }
   
-  /// Add itinerary event to trip
   static Future<Map<String, dynamic>?> addItineraryEvent({
     required String tripId,
     required String ownerUserId,

@@ -3,10 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SocialButton extends StatelessWidget {
   final String label;
-  final IconData icon; // fallback if asset missing
+  final IconData icon;
   final VoidCallback onPressed;
   final double height;
-  final String? leadingAsset; // optional asset path for branded icon
+  final String? leadingAsset;
   final double leadingSize;
 
   const SocialButton({
@@ -49,7 +49,6 @@ class SocialButton extends StatelessWidget {
                       width: leadingSize,
                       height: leadingSize,
                       fit: BoxFit.contain,
-                      // Don't apply color filter to preserve original SVG colors
                     )
                   : Image.asset(
                       leadingAsset!,

@@ -24,17 +24,13 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top header with SOS and Profile
             TopHeaderWidget(onBackground: onBackground),
-            
-            // Main content
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Trip cards section
                     Row(
                       children: [
                         Expanded(
@@ -58,25 +54,13 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    
                     const SizedBox(height: 20),
-                    
-                    // Quick Stats Section
                     _QuickStatsSection(card: card, onBackground: onBackground, muted: muted, accent: accent),
-                    
                     const SizedBox(height: 20),
-                    
-                    // Mini Map section
                     _MiniMapCard(card: card, onBackground: onBackground, muted: muted),
-                    
                     const SizedBox(height: 20),
-                    
-                    // Recent Activity Section
                     _RecentActivitySection(card: card, onBackground: onBackground, muted: muted, accent: accent),
-                    
                     const SizedBox(height: 20),
-                    
-                    // Safety Tips Section
                     _SafetyTipsSection(card: card, onBackground: onBackground, muted: muted, accent: accent),
                   ],
                 ),
