@@ -7,6 +7,7 @@ import ResultsPanel from './components/ResultsPanel'
 import GroupDetails from './components/GroupDetails'
 import NotificationsPanel from './components/NotificationsPanel'
 import GroupModal from './components/GroupModal'
+import EFIRModal from './components/EFIRModal'
 import mock from './data/mockData'
 import { findNearbyGroups, findByGroupId, findByUserId } from './utils/search'
 import { Routes, Route, useNavigate } from 'react-router-dom'
@@ -15,6 +16,7 @@ export default function App() {
   const navigate = useNavigate()
   const [groups] = useState(mock.groups)
   const [heatPoints] = useState(mock.heatPoints)
+  const [efirs] = useState(mock.efirs)
   const [results, setResults] = useState([])
   const [selected, setSelected] = useState(null)
   const [center, setCenter] = useState([20, 78]) // India-ish default
@@ -128,11 +130,11 @@ export default function App() {
           </div>
         </div>
         <div className="hidden sm:flex items-center gap-2">
-          {/* room for future actions */}
+          <button className="btn" onClick={() => navigate('/efir')}>E-FIR</button>
         </div>
       </div>
     </header>
-  ), [])
+  ), [navigate])
 
   return (
     <div className="min-h-full flex flex-col">
@@ -165,14 +167,15 @@ export default function App() {
           </div>
           {selected && (
             <div className="card p-4">
-              <GroupDetails data={selected} />
+              <GroupDetails data={selected} onLocate={onLocate} />
             </div>
           )}
         </div>
       </div>
       {/* Route-driven modal overlay */}
       <Routes>
-        <Route path="/group/:id" element={<GroupModal groups={groups} />} />
+  <Route path="/group/:id" element={<GroupModal groups={groups} onLocate={onLocate} />} />
+        <Route path="/efir" element={<EFIRModal efirs={efirs} onLocate={onLocate} />} />
       </Routes>
       <Toaster position="top-center" />
     </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function GroupDetails({ data }) {
+export default function GroupDetails({ data, onLocate }) {
   if (!data) return null
   const isGroup = data.type === 'group'
   return (
@@ -33,12 +33,15 @@ export default function GroupDetails({ data }) {
           <div className="space-y-2 max-h-52 overflow-auto pr-1">
             {data.members.map(m => (
               <div key={m.id} className="card p-3">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <div>
                     <div className="font-medium">{m.name}</div>
                     <div className="text-xs text-gray-400">Public ID: {m.id}</div>
                   </div>
-                  <span className="badge bg-purple-500/20 text-purple-300">Member</span>
+                  <div className="flex items-center gap-2">
+                    <span className="badge bg-purple-500/20 text-purple-300">Member</span>
+                    <button className="btn" onClick={() => onLocate?.(m.lastLocation)}>Locate</button>
+                  </div>
                 </div>
               </div>
             ))}

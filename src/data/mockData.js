@@ -96,4 +96,28 @@ const notifications = [
   },
 ]
 
-export default { groups, heatPoints, notifications }
+// Sample E-FIR entries
+const efirs = [
+  {
+    id: 'FIR-2025-0001',
+    userId: 'USOR7QNK',
+    name: 'Aisha Khan',
+    title: 'Lost Passport',
+    description: 'Reported loss of passport near Connaught Place.',
+    location: [28.61, 77.20],
+    status: 'Submitted',
+    ts: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
+  },
+  {
+    id: 'FIR-2025-0002',
+    userId: 'V6C2K8RM',
+    name: 'Ritika Shah',
+    title: 'Phone Snatched',
+    description: 'Mobile phone snatched near Andheri station.',
+    location: [19.11, 72.84],
+    status: 'In Review',
+    ts: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
+  },
+]
+
+export default { groups, heatPoints, notifications, efirs }

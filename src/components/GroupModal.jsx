@@ -15,7 +15,7 @@ function PassportPhoto({ src, name }) {
   )
 }
 
-export default function GroupModal({ groups }) {
+export default function GroupModal({ groups, onLocate }) {
   const { id } = useParams()
   const navigate = useNavigate()
   const close = () => navigate('/')
@@ -54,6 +54,9 @@ export default function GroupModal({ groups }) {
                   <Info label="Nationality" value={m.nationality || 'Indian'} />
                   <div className="sm:col-span-2">
                     <Info label="Address" value={m.address || '221B, Baker Street, Bengaluru, KA 560001'} />
+                  </div>
+                  <div className="sm:col-span-2 flex justify-end">
+                    <button className="btn" onClick={() => onLocate?.(m.lastLocation)}>Locate</button>
                   </div>
                 </div>
               </div>
