@@ -4,6 +4,7 @@ import '../../widgets/common/top_header_widget.dart';
 import '../trip/trip_details_page.dart';
 import '../trip/trip_list_page.dart';
 import '../../models/trip_model.dart';
+import '../../services/mock_trip_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -69,39 +70,15 @@ class _HomePageState extends State<HomePage> {
                       muted: muted, 
                       accent: accent,
                       onTap: () {
-                        // Create a mock current trip for demonstration
-                        final currentTrip = Trip(
-                          id: 'trip_1757437199588_bpdolvdr6',
-                          title: 'Goa Beach Resort',
-                          destination: 'Goa, India',
-                          startDate: DateTime.now().subtract(const Duration(days: 2)),
-                          endDate: DateTime.now().add(const Duration(days: 3)),
-                          joinedUsers: ['user1', 'user2', 'user3'],
-                          groupId: 'group_123',
-                          events: [
-                            TripEvent(
-                              id: 'event1',
-                              type: 'Check-in',
-                              location: 'Hotel Check-in',
-                              time: DateTime.now().subtract(const Duration(days: 2)),
+                        final currentTrip = MockTripService.getCurrentTrip();
+                        if (currentTrip != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TripDetailsPage(trip: currentTrip),
                             ),
-                            TripEvent(
-                              id: 'event2',
-                              type: 'Activity',
-                              location: 'Beach Visit',
-                              time: DateTime.now().subtract(const Duration(days: 1)),
-                            ),
-                          ],
-                          status: 'active',
-                          imageUrl: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&q=80',
-                        );
-                        
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TripDetailsPage(trip: currentTrip),
-                          ),
-                        );
+                          );
+                        }
                       },
                     ),
                     const SizedBox(height: 20),
@@ -136,6 +113,8 @@ class _QuickStatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final stats = MockTripService.getTripStats();
+    
     return Container(
       height: 160, // Fixed height for equal sizing
       padding: const EdgeInsets.all(16),
@@ -185,7 +164,7 @@ class _QuickStatsCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Total Trips: 12',
+                        'Total Trips: ${stats['totalTrips']}',
                         style: TextStyle(
                           color: onBackground,
                           fontSize: 13,
@@ -208,7 +187,7 @@ class _QuickStatsCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Cities Visited: 8',
+                        'Cities Visited: ${stats['citiesVisited']}',
                         style: TextStyle(
                           color: onBackground,
                           fontSize: 13,
@@ -242,9 +221,8 @@ class _CurrentTripSection extends StatelessWidget {
     this.onTap,
   });
 
-  void _copyTripIdToClipboard(BuildContext context) {
-    const tripId = 'trip_1757437199588_bpdolvdr6';
-    Clipboard.setData(const ClipboardData(text: tripId));
+  void _copyTripIdToClipboard(BuildContext context, String tripId) {
+    Clipboard.setData(ClipboardData(text: tripId));
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -267,6 +245,65 @@ class _CurrentTripSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentTrip = MockTripService.getCurrentTrip();
+    
+    if (currentTrip == null) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: card,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.location_on_rounded, color: accent, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'Current Trip',
+                  style: TextStyle(
+                    color: onBackground,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.trip_origin_rounded,
+                    color: muted,
+                    size: 48,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'No active trips',
+                    style: TextStyle(
+                      color: muted,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -307,11 +344,21 @@ class _CurrentTripSection extends StatelessWidget {
                 height: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  image: const DecorationImage(
-                    image: NetworkImage('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&q=80'),
-                    fit: BoxFit.cover,
-                  ),
+                  image: currentTrip.imageUrl != null
+                      ? DecorationImage(
+                          image: NetworkImage(currentTrip.imageUrl!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                  color: currentTrip.imageUrl == null ? accent.withOpacity(0.1) : null,
                 ),
+                child: currentTrip.imageUrl == null
+                    ? Icon(
+                        Icons.trip_origin_rounded,
+                        color: accent,
+                        size: 30,
+                      )
+                    : null,
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -319,7 +366,7 @@ class _CurrentTripSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Goa Beach Resort',
+                      currentTrip.title,
                       style: TextStyle(
                         color: onBackground,
                         fontSize: 20,
@@ -328,7 +375,7 @@ class _CurrentTripSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Active • 2 days left',
+                      'Active • ${_getDaysLeft(currentTrip.endDate)} days left',
                       style: TextStyle(
                         color: accent,
                         fontSize: 14,
@@ -386,7 +433,7 @@ class _CurrentTripSection extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         GestureDetector(
-                          onTap: () => _copyTripIdToClipboard(context),
+                          onTap: () => _copyTripIdToClipboard(context, currentTrip.id),
                           child: Icon(
                             Icons.copy_rounded,
                             color: accent,
@@ -404,6 +451,12 @@ class _CurrentTripSection extends StatelessWidget {
       ),
       ),
     );
+  }
+  
+  int _getDaysLeft(DateTime endDate) {
+    final now = DateTime.now();
+    final difference = endDate.difference(now).inDays;
+    return difference > 0 ? difference : 0;
   }
 }
 
@@ -424,17 +477,8 @@ class _YourTripsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> trips = [
-      {"name": "Iyer's House", "status": "Completed"},
-      {"name": "Sikkim", "status": "Upcoming"},
-      {"name": "PICT", "status": "Completed"},
-      {"name": "Mumbai Gateway", "status": "Completed"},
-      {"name": "Kerala Backwaters", "status": "Upcoming"},
-      {"name": "Rajasthan Desert", "status": "Completed"},
-      {"name": "Himachal Hills", "status": "Upcoming"},
-      {"name": "Chennai Marina", "status": "Completed"},
-    ];
-
+    final trips = MockTripService.getSortedTrips();
+    
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -472,14 +516,14 @@ class _YourTripsCard extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: trips.map((trip) {
+                children: trips.take(6).map((trip) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
                       children: [
                         Expanded(
                           child: Text(
-                            trip['name']!,
+                            trip.title,
                             style: TextStyle(
                               color: onBackground,
                               fontSize: 13,
@@ -491,12 +535,16 @@ class _YourTripsCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Icon(
-                          trip['status'] == 'Completed' 
+                          trip.status == 'completed' 
                               ? Icons.check_circle_rounded
-                              : Icons.schedule_rounded,
-                          color: trip['status'] == 'Completed' 
+                              : trip.status == 'active'
+                                ? Icons.play_circle_rounded
+                                : Icons.schedule_rounded,
+                          color: trip.status == 'completed' 
                               ? Colors.green
-                              : Colors.orange,
+                              : trip.status == 'active'
+                                ? Colors.blue
+                                : Colors.orange,
                           size: 16,
                         ),
                       ],
