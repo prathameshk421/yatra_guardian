@@ -8,15 +8,24 @@ import GroupDetails from './components/GroupDetails'
 import NotificationsPanel from './components/NotificationsPanel'
 import GroupModal from './components/GroupModal'
 import EFIRModal from './components/EFIRModal'
+import stations from './data/stations'
 import mock from './data/mockData'
+import tourists from './data/tourists'
 import { findNearbyGroups, findByGroupId, findByUserId } from './utils/search'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 
 export default function App() {
   const navigate = useNavigate()
   const [groups] = useState(mock.groups)
-  const [heatPoints] = useState(mock.heatPoints)
-  const [efirs] = useState(mock.efirs)
+  // Build heat points from tourists dataset for better density map
+  const [heatPoints] = useState(() => {
+    if (Array.isArray(tourists) && tourists.length) {
+      // Map to [lat, lng, intensity]; slightly vary intensity by city clusters
+      return tourists.map(t => [t.location[0], t.location[1], 0.6])
+    }
+    return mock.heatPoints
+  })
+  const [efirs, setEfirs] = useState(mock.efirs)
   const [results, setResults] = useState([])
   const [selected, setSelected] = useState(null)
   const [center, setCenter] = useState([20, 78]) // India-ish default
@@ -46,6 +55,25 @@ export default function App() {
     setResults(res)
     setNearbyCount(res.length)
     if (res.length) setCenter(res[0].lastLocation)
+  }
+
+  // Locate tourist by generated ID from tourists dataset; also pulse the map
+  const onSearchTouristId = (tid) => {
+    const idNorm = tid?.trim().toLowerCase()
+    if (!idNorm) return
+    const t = tourists.find(x => x.id.toLowerCase() === idNorm)
+    if (t) {
+      const loc = t.location
+      setCenter(loc)
+      setPulseAt({ at: loc, ts: Date.now() })
+      // Show a lightweight toast-like notification via Results panel by clearing
+      setSelected(null)
+      setResults([])
+      setNearbyCount(0)
+      toast.success(`Located ${t.name ?? t.id}`)
+    } else {
+      toast.error('Tourist ID not found')
+    }
   }
 
   const onMapClick = (latlng) => {
@@ -84,6 +112,20 @@ export default function App() {
     setNotifications((prev) => [note, ...prev])
     toast.error('Help request received', { icon: '🚨' })
     setCenter(loc)
+  }
+
+  // Update FIR (description/status) by police
+  const onUpdateEFIR = (firId, { policeNotes, status }) => {
+    setEfirs(prev => prev.map(f => f.id === firId ? { ...f, policeNotes: (policeNotes ?? f.policeNotes), status: (status ?? f.status), updatedTs: new Date().toISOString() } : f))
+    if (policeNotes) toast.success('Notes saved')
+    if (status && status !== 'Submitted') toast.success(`Status updated to ${status}`)
+  }
+
+  // Transfer FIR to a station with optional notes
+  const onTransferEFIR = (firId, stationId, notes) => {
+    const station = stations.find(s => s.id === stationId)
+    setEfirs(prev => prev.map(f => f.id === firId ? { ...f, transferredTo: stationId, transferNotes: notes, transferTs: new Date().toISOString() } : f))
+    toast.success(`Transferred to ${station?.name ?? 'selected station'}`)
   }
 
   // Warn if center falls into a danger zone at deep zoom (handled via heat map zoom awareness)
@@ -157,7 +199,7 @@ export default function App() {
         {/* Right: Panels */}
         <div className="flex flex-col gap-4 h-[calc(100vh-6rem)] overflow-auto">
           <div className="card p-4">
-            <SearchSidebar onSearchGroupId={onSearchGroupId} onSearchUserId={onSearchUserId} nearbyCount={nearbyCount} />
+            <SearchSidebar onSearchGroupId={onSearchGroupId} onSearchUserId={onSearchUserId} onSearchTouristId={onSearchTouristId} nearbyCount={nearbyCount} />
           </div>
           <div className="card p-4">
             <NotificationsPanel notifications={notifications} onLocate={onLocate} />
@@ -175,7 +217,7 @@ export default function App() {
       {/* Route-driven modal overlay */}
       <Routes>
   <Route path="/group/:id" element={<GroupModal groups={groups} onLocate={onLocate} />} />
-        <Route path="/efir" element={<EFIRModal efirs={efirs} onLocate={onLocate} />} />
+        <Route path="/efir" element={<EFIRModal efirs={efirs} onLocate={onLocate} onUpdateEFIR={onUpdateEFIR} onTransferEFIR={onTransferEFIR} stations={stations} />} />
       </Routes>
       <Toaster position="top-center" />
     </div>

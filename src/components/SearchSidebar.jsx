@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 
-export default function SearchSidebar({ onSearchGroupId, onSearchUserId, nearbyCount }) {
+export default function SearchSidebar({ onSearchGroupId, onSearchUserId, onSearchTouristId, nearbyCount }) {
   const [groupId, setGroupId] = useState('')
   const [userId, setUserId] = useState('')
+  const [touristId, setTouristId] = useState('')
 
   return (
     <div>
@@ -22,11 +23,13 @@ export default function SearchSidebar({ onSearchGroupId, onSearchUserId, nearbyC
             <button className="btn" onClick={() => onSearchUserId(userId)}>Find</button>
           </div>
         </div>
-      </div>
-      <div className="mt-6">
-        <div className="card p-3 text-center">
-          <div className="text-xs text-gray-400">Nearby groups</div>
-          <div className="text-2xl font-semibold">{nearbyCount ?? 0}</div>
+        <div>
+          <label className="block text-xs text-gray-300 mb-1">Locate Tourist by ID</label>
+          <div className="flex gap-2">
+            <input className="input" value={touristId} onChange={(e) => setTouristId(e.target.value)} placeholder="e.g., DEL-TR0001" />
+            <button className="btn" onClick={() => onSearchTouristId?.(touristId)}>Locate</button>
+          </div>
+          <div className="text-[10px] text-gray-400 mt-1">Tip: IDs look like DEL-TR0001, MUM-TR0035, BLR-TR0060…</div>
         </div>
       </div>
     </div>

@@ -29,6 +29,13 @@
   }
 }
 
+/* Ensure selects are readable in dark theme (plain CSS to avoid @apply lint) */
+select.input { background-color: #ffffff !important; color: #000000 !important; }
+select.input:focus { outline: none; box-shadow: 0 0 0 2px rgba(56,189,248,0.5); }
+/* Make option text and bg readable */
+select.input option { color: #000; background-color: #fff; }
+select.input optgroup { color: #000; background-color: #fff; }
+
 /* Leaflet overrides for dark theme */
 .leaflet-container {
   background: #000000;

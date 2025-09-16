@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { MapContainer, TileLayer, Tooltip, useMapEvents, useMap, Circle } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -64,6 +64,8 @@ function ZoomControlTopRight() {
 }
 
 export default function MapView({ center, heatPoints, results, selected, onMapClick, allGroups = [], onRefresh, pulseAt }) {
+  const [showHeat, setShowHeat] = useState(true)
+  const heatLayerRef = useRef(null)
   // Zones (lat, lng, radius meters)
   const safeZones = [
     { id: 'SZ-DEL', label: 'Safe Zone', center: [28.6139, 77.2090], radius: 8000 }, // Delhi
@@ -94,13 +96,17 @@ export default function MapView({ center, heatPoints, results, selected, onMapCl
       <Recenter center={center} />
   <ZoomControlTopRight />
   <RefreshControl onRefresh={onRefresh} position="topright" />
+  <HeatmapToggle showHeat={showHeat} setShowHeat={setShowHeat} />
 
     {/* Zones: green safe areas and red danger areas (click to list groups) */}
     <ZonesLayer safeZones={safeZones} dangerZones={dangerZones} onZoneClick={onMapClick} />
     <LegendControl />
     <PulsingMarker pulseAt={pulseAt} />
 
-      {/* No group/solo markers shown per requirement */}
+  {/* Heat layer */}
+  <HeatLayer show={showHeat} points={heatPoints} heatLayerRef={heatLayerRef} />
+
+  {/* No group/solo markers shown per requirement */}
 
       {/* Zones rendered above */}
     </MapContainer>
@@ -229,5 +235,66 @@ function PulsingMarker({ pulseAt }) {
       circles.forEach(c => c.remove())
     }
   }, [pulseAt, map])
+  return null
+}
+
+function HeatmapToggle({ position = 'topright', showHeat, setShowHeat }) {
+  const map = useMap()
+  useEffect(() => {
+    const ctrl = L.control({ position })
+    ctrl.onAdd = () => {
+      const div = L.DomUtil.create('div', 'leaflet-bar')
+      const link = L.DomUtil.create('a', '', div)
+      link.href = '#'
+      link.title = 'Toggle tourist heatmap'
+      link.innerHTML = showHeat ? '🔥' : '❄️'
+      link.style.width = '28px'
+      link.style.height = '28px'
+      link.style.lineHeight = '28px'
+      link.style.textAlign = 'center'
+      L.DomEvent.on(link, 'click', (e) => {
+        L.DomEvent.stop(e)
+        setShowHeat((v) => !v)
+      })
+      return div
+    }
+    ctrl.addTo(map)
+    return () => ctrl.remove()
+  }, [map, position, showHeat, setShowHeat])
+  return null
+}
+
+function HeatLayer({ show, points = [], heatLayerRef }) {
+  const map = useMap()
+  useEffect(() => {
+    if (!map) return
+    if (show && points?.length) {
+      // Create once then update data
+      if (!heatLayerRef.current) {
+        heatLayerRef.current = L.heatLayer(points, {
+          radius: 22, // reduced to original feel
+          blur: 18,
+          maxZoom: 12,
+          minOpacity: 0.25,
+          gradient: {
+            0.0: '#f87171',
+            0.5: '#ef4444',
+            0.8: '#dc2626',
+            1.0: '#991b1b', // darker red peak
+          },
+        })
+        heatLayerRef.current.addTo(map)
+      } else {
+        heatLayerRef.current.setLatLngs(points)
+        heatLayerRef.current.redraw()
+      }
+    } else {
+      if (heatLayerRef.current) {
+        heatLayerRef.current.remove()
+        heatLayerRef.current = null
+      }
+    }
+    return () => {}
+  }, [map, show, points, heatLayerRef])
   return null
 }
