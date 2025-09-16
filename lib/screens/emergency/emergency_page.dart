@@ -4,6 +4,7 @@ import '../../widgets/common/top_header_widget.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 import '../police/police_dashboard.dart';
+import 'efir_complaint_page.dart';
 
 class EmergencyPage extends StatefulWidget {
   const EmergencyPage({super.key});
@@ -220,6 +221,13 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
         icon: Icons.tour,
         color: Colors.green,
         onTap: () => _callEmergency('1363'),
+      ),
+      HelpOption(
+        title: 'EFIR Portal',
+        subtitle: 'File Complaint Online',
+        icon: Icons.report_problem,
+        color: Colors.purple,
+        onTap: () => _navigateToEfirPortal(),
       ),
     ];
 
@@ -464,6 +472,16 @@ class _EmergencyPageState extends State<EmergencyPage> with TickerProviderStateM
       context,
       MaterialPageRoute(
         builder: (context) => const PoliceDashboard(),
+      ),
+    );
+  }
+
+  void _navigateToEfirPortal() {
+    HapticFeedback.lightImpact();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const EfirComplaintPage(),
       ),
     );
   }
