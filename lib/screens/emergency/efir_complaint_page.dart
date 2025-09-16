@@ -72,39 +72,42 @@ class _EfirComplaintPageState extends State<EfirComplaintPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header section
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.card,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.report_problem,
-                      size: 48,
-                      color: AppColors.accent,
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Electronic First Information Report',
-                      style: AppTheme.sectionHeader.copyWith(fontSize: 18),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'File your complaint online securely',
-                      style: AppTheme.mutedText,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+              Center(
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.card,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.report_problem,
+                        size: 48,
+                        color: AppColors.accent,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Electronic First Information Report',
+                        style: AppTheme.sectionHeader.copyWith(fontSize: 18),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'File your complaint online securely',
+                        style: AppTheme.mutedText,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               
